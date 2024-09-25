@@ -5,6 +5,8 @@ jobs:
 
   linux:
     runs-on: ubuntu-latest
+    env:
+      DEPL_EXE_NAME: 'linux_x86_64'
     steps:
     - uses: actions/checkout@v4
     - uses: sayyid5416/pyinstaller@v1
@@ -13,11 +15,14 @@ jobs:
         pyinstaller_ver: '==6.10.0'
         spec: 'src/example.py'
         requirements: 'src/requirements.txt'
-        exe_path: 'builds/linux_x86_x6'
+        exe_path: 'builds/linux_x86_x64'
+        upload_exe_with_name: '$DEPL_EXE_NAME'
         options: --onefile, --name "Example App"
 
   windows:
     runs-on: windows-2019
+    env:
+      DEPL_EXE_NAME: 'windows_x86_64'
     steps:
     - uses: actions/checkout@v4
     - uses: sayyid5416/pyinstaller@v1
@@ -26,7 +31,8 @@ jobs:
         pyinstaller_ver: '==6.10.0'
         spec: 'src/example.py'
         requirements: 'src/requirements.txt'
-        exe_path: 'builds/windows_x86_64'
+        exe_path: 'builds/$DEPL_EXE_NAME'
+        upload_exe_with_name: '$DEPL_EXE_NAME'
         options: --onefile, --name "Example App"
 
   macos:
@@ -42,6 +48,7 @@ jobs:
     env:
       # even though we run on 12, target towards compatibility
       MACOSX_DEPLOYMENT_TARGET: '11.0'
+      DEPL_EXE_NAME: macos_${{ matrix.arch }}'
     steps:
     - uses: actions/checkout@v4
     - uses: sayyid5416/pyinstaller@v1
@@ -50,5 +57,6 @@ jobs:
         pyinstaller_ver: '==6.10.0'
         spec: 'src/example.py'
         requirements: 'src/requirements.txt'
-        exe_path: 'builds/macos_${{ matrix.arch }}'
+        exe_path: 'builds/$DEPL_EXE_NAME'
+        upload_exe_with_name: '$DEPL_EXE_NAME'
         options: --onefile, --name "Example App"
