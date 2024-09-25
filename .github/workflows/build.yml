@@ -1,6 +1,6 @@
 name: Pyinstaller Build Test
 run-name: ${{ github.actor }} is building python code.
-on: [push]
+on: [push, workflow_dispatch]
 jobs:
 
   stage:
