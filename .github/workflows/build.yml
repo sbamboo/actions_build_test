@@ -31,10 +31,6 @@ jobs:
         name: fused
         path: staged/fused/
 
-    - run: ls staged/fused/
-
-    - run: cat staged/fused/staged.py
-
     - uses: sayyid5416/pyinstaller@v1
       with:
         python_ver: '3.12'
