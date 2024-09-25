@@ -323,7 +323,7 @@ parse_file("esm",mainFile_p,os.path.join(esmOut_p,config["esm"]["output-main-fil
 # Fused
 parse_file("fuse",mainFile_p,fusedOut_p,config["file"],encoding=encoding)
 
-fprint("Done! Wrote to "+os.path.abspath(config["builds-dir"])+"!\n"+"ESM: "+os.path.join(esmOut_p,config["esm"]["output-main-file"])+"\n FUSED: "+fusedOut_p)
+fprint("Done! Wrote to "+os.path.abspath(config["builds-dir"])+"!\n"+"ESM: "+os.path.join(esmOut_p,config["esm"]["output-main-file"])+"\nFUSED: "+fusedOut_p)
 
 pfts = config.get("post-fuse-test-script")
 if pfts != None:
