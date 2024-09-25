@@ -17,7 +17,7 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: fused
-        path: staged/fused
+        path: staged/fused/staged.py
 
   linux:
     needs: stage
@@ -29,7 +29,8 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: fused
-        path: staged/fused
+
+    - run: ls
 
     - uses: sayyid5416/pyinstaller@v1
       with:
@@ -50,7 +51,6 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: fused
-        path: staged/fused
 
     - uses: sayyid5416/pyinstaller@v1
       with:
@@ -82,7 +82,6 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: fused
-        path: staged/fused
         
     - uses: sayyid5416/pyinstaller@v1
       with:
