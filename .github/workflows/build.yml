@@ -36,8 +36,6 @@ jobs:
         name: fused
         path: staged/fused
 
-    - run: cat staged/fused/__init__.py
-
     - uses: sayyid5416/pyinstaller@v1
       with:
         python_ver: '3.12'
@@ -59,8 +57,6 @@ jobs:
       with:
         name: fused
         path: staged/fused
-
-    - run: cat staged/fused/__init__.py
 
     - uses: sayyid5416/pyinstaller@v1
       with:
@@ -94,8 +90,6 @@ jobs:
       with:
         name: fused
         path: staged/fused
-
-    - run: cat staged/fused/__init__.py
         
     - uses: sayyid5416/pyinstaller@v1
       with:
