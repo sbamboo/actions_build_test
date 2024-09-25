@@ -1,14 +1,54 @@
-name: Python Build Test-Workflow
+name: Pyinstaller Build Test
 run-name: ${{ github.actor }} is building python code.
 on: [push]
 jobs:
+
   linux:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: sayyid5416/pyinstaller@v1
       with:
-        python-version-file: pyproject.toml
-        #cache: 'pip' # caching pip dependencies
-    - run: pip install -r requirements.txt
-    - run: python example.py
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'src/example.py'
+        requirements: 'src/requirements.txt'
+        exe_path: 'builds/linux_x86_x6'
+        options: --onefile, --name "Example App"
+
+  windows:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v4
+    - uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'src/example.py'
+        requirements: 'src/requirements.txt'
+        exe_path: 'builds/windows_x86_64'
+        options: --onefile, --name "Example App"
+
+  macos:
+    strategy:
+      matrix:
+        os-version: ['12', '14']
+        include:
+          - os-version: '12'
+            arch: x86_64
+          - os-version: '14'
+            arch: aarch64
+    runs-on: macos-${{ matrix.os-version }}
+    env:
+      # even though we run on 12, target towards compatibility
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+    steps:
+    - uses: actions/checkout@v4
+    - uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'src/example.py'
+        requirements: 'src/requirements.txt'
+        exe_path: 'builds/macos_${{ matrix.arch }}'
+        options: --onefile, --name "Example App"
