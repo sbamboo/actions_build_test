@@ -9,17 +9,17 @@ config = {
 
     "proj-name": "example",
 
-    "builds-dir": "./staged/",
+    "builds-dir": "./../staged/",
 
-    "main-file": "./src/__init__.py",
+    "main-file": "./../src/__init__.py",
     
     "esm": { # EmbedableSourceModule
-        "output-dir": "./staged/esm/%pn",
+        "output-dir": "./../staged/esm/%pn",
         "output-main-file": "__init__.py"
     },
 
     "fused": { # %1: FileName, %2: FileExt
-        "output-file": "./staged/fused/%pn.%2"
+        "output-file": "./../staged/fused/%pn.%2"
     },
 
     "file": { # id to use in include to spec this opts
