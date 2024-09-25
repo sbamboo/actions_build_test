@@ -15,8 +15,7 @@ jobs:
         pyinstaller_ver: '==6.10.0'
         spec: 'src/example.py'
         requirements: 'src/requirements.txt'
-        exe_path: 'builds/linux_x86_x64'
-        upload_exe_with_name: '$DEPL_EXE_NAME'
+        upload_exe_with_name: "$DEPL_EXE_NAME"
         options: --onefile, --name "Example App"
 
   windows:
@@ -31,8 +30,7 @@ jobs:
         pyinstaller_ver: '==6.10.0'
         spec: 'src/example.py'
         requirements: 'src/requirements.txt'
-        exe_path: 'builds/$DEPL_EXE_NAME'
-        upload_exe_with_name: '$DEPL_EXE_NAME'
+        upload_exe_with_name: "$DEPL_EXE_NAME"
         options: --onefile, --name "Example App"
 
   macos:
@@ -57,6 +55,5 @@ jobs:
         pyinstaller_ver: '==6.10.0'
         spec: 'src/example.py'
         requirements: 'src/requirements.txt'
-        exe_path: 'builds/$DEPL_EXE_NAME'
-        upload_exe_with_name: '$DEPL_EXE_NAME'
+        upload_exe_with_name: "$DEPL_EXE_NAME"
         options: --onefile, --name "Example App"
