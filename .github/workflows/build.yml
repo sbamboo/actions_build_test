@@ -41,7 +41,7 @@ jobs:
         requirements: 'src/requirements.txt'
         upload_exe_with_name: 'linux_x86_64'
         clean_checkout: false
-        options: --onefile, --name "Example App"
+        options: --onefile, --name "ExampleApp"
 
   windows:
     needs: stage
@@ -65,7 +65,7 @@ jobs:
         requirements: 'src/requirements.txt'
         upload_exe_with_name: 'windows_x86_64'
         clean_checkout: false
-        options: --onefile, --name "Example App"
+        options: --onefile, --name "ExampleApp"
 
   macos:
     needs: stage
@@ -100,4 +100,4 @@ jobs:
         requirements: 'src/requirements.txt'
         upload_exe_with_name: 'macos_${{ matrix.arch }}'
         clean_checkout: false
-        options: --onefile, --name "Example App"
+        options: --onefile, --name "ExampleApp"
