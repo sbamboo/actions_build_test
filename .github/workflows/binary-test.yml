@@ -1,0 +1,76 @@
+name: Binary Test
+run-name: ${{ github.actor }} is testing built python code.
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+
+
+jobs:
+
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+        
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: 'linux_x86_64'
+
+    - run: ls
+
+
+  windows:
+    runs-on: windows-2019
+    steps:
+        
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: 'windows_x86_64'
+
+    - run: ls
+
+
+  macos:
+    strategy:
+      matrix:
+        os-version: ['12', '14']
+        include:
+          - os-version: '12'
+            arch: x86_64
+          - os-version: '14'
+            arch: aarch64
+    runs-on: macos-${{ matrix.os-version }}
+    env:
+      # even though we run on 12, target towards compatibility
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+    steps:
+        
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: 'macos_${{ matrix.arch }}'
+
+    - run: ls
