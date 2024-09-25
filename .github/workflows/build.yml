@@ -11,13 +11,13 @@ jobs:
       with:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
-    - run: pip install -r stage-requirements.txt
-    - run: python staging/stage.py
+    - run: pip install -r staged/stage-requirements.txt
+    - run: python staged/stager.py
 
     - uses: actions/upload-artifact@master
       with:
         name: fused
-        path: staged/fused/staged.py
+        path: staged/fused.py
 
   linux:
     needs: stage
@@ -29,17 +29,14 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: fused
-        path: staged/fused/
-
-    - run: ls staged/fused/
-
-    - run: cat staged/fused/staged.py
+        path: staged/
 
     - uses: sayyid5416/pyinstaller@v1
       with:
         python_ver: '3.12'
         pyinstaller_ver: '==6.10.0'
-        spec: 'staged/staged.py'
-        requirements: 'staged/requirements.txt'
+        spec: 'staged/fused/__init__.py'
+        requirements: 'src/requirements.txt'
         upload_exe_with_name: 'linux_x86_64'
+        clean_checkout: false
         options: --onefile, --name "Example App"

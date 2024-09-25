@@ -19,7 +19,7 @@ config = {
     },
 
     "fused": { # %1: FileName, %2: FileExt
-        "output-file": "./../staged/fused/staged.%2"
+        "output-file": "./../staged/fused/__init__.%2"
     },
 
     "file": { # id to use in include to spec this opts
