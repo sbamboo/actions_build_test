@@ -17,7 +17,7 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: fused
-        path: staged/fused/staged.py
+        path: staged/fused/__init__.py
 
   linux:
     needs: stage
@@ -33,13 +33,13 @@ jobs:
 
     - run: ls staged/fused/
 
-    - run: cat staged/fused/staged.py
+    - run: cat staged/fused/__init__.py
 
     - uses: sayyid5416/pyinstaller@v1
       with:
         python_ver: '3.12'
         pyinstaller_ver: '==6.10.0'
-        spec: 'staged/fused/staged.py'
+        spec: 'staged/fused/__init__.py'
         requirements: 'src/requirements.txt'
         upload_exe_with_name: 'linux_x86_64'
         options: --onefile, --name "Example App"
