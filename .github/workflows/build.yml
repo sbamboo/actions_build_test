@@ -12,7 +12,7 @@ jobs:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
     - run: pip install -r stage-requirements.txt
-    - run: python staged/stage.py
+    - run: python staging/stage.py
 
     - uses: actions/upload-artifact@master
       with:
