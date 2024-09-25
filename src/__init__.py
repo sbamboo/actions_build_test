@@ -19,5 +19,5 @@ else:
 
 
 
-console.print('Running mode:', running_mode, style="mageneta")
-console.print('  Appliction path  :', application_path, style="mageneta")
+console.print('Running mode:', running_mode, style="magenta")
+console.print('  Appliction path  :', application_path, style="magenta")
