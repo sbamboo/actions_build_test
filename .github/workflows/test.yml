@@ -1,5 +1,5 @@
-name: Pyinstaller Release
-run-name: ${{ github.actor }} is building and releasing python code.
+name: Pyinstaller Ttest
+run-name: ${{ github.actor }} is testing python code.
 on:
   workflow_dispatch:
 
