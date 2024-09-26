@@ -43,17 +43,21 @@ jobs:
 
     - name: Read content and replace placeholder in index.html
       run: |
-        # Read the content of the Python file into a temporary variable
+        # Read the content into vars
         content=$(<staged/fused/__init__.py)
+        requirements=$(<src/requirements.txt)
 
-        # Create a temporary file with the content
+        # Create temporary files
         echo "$content" > temp_content.txt
+        echo "$requirements" > temp_requirements.txt
 
-        # Replace the placeholder in the HTML file using the temporary file
-        sed -e "/<!--SOURCEHERE-->/r temp_content.txt" -e "//d" src/targets/web/index.html > ./builds/web/index.html
+        # Replace the placeholders in the HTML file using the temporary file
+        sed -e "/<!--SOURCEHERE-->/r temp_content.txt" -e "//d" \
+              -e "/<!--REQUIREMENTSHERE-->/r temp_requirements.txt" -e "//d" \
+              src/targets/web/index.html > ./builds/web/index.html
 
         # Clean up temporary file
-        rm temp_content.txt
+        rm temp_content.txt temp_requirements.txt
 
     - uses: actions/upload-artifact@master
       with:
