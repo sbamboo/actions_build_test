@@ -162,4 +162,4 @@ jobs:
         with:
           files: |
             ./builds/dist/*
-        tag_name: ${{ steps.tag.outputs.tag }}
+          tag_name: ${{ steps.tag.outputs.tag }}
