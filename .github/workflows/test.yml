@@ -23,6 +23,8 @@ jobs:
         name: fused
         path: staged/fused/*
 
+    - run: python staged/fused/__init__.py
+
   linux:
     needs: stage
     runs-on: ubuntu-latest
@@ -44,7 +46,8 @@ jobs:
         exe_path: "./builds"
         options: --onefile, --name "ExampleApp"
 
-    - run: ./builds/ExampleApp
+    - name: Test run built binary (linux_x86_64 @ ubuntu-latest)
+      run: ./builds/ExampleApp
 
   windows:
     needs: stage
@@ -67,7 +70,8 @@ jobs:
         exe_path: "./builds"
         options: --onefile, --name "ExampleApp"
 
-    - run: ./builds/ExampleApp.exe
+    - name: Test run built binary (windows_x86_64 @ windows-2019)
+      run: ./builds/ExampleApp.exe
 
   macos:
     needs: stage
@@ -101,4 +105,5 @@ jobs:
         exe_path: "./builds"
         options: --onefile, --name "ExampleApp"
 
-    - run: ./builds/ExampleApp
+    - name: Test run built binary (MacOS_${{ matrix.arch }} @ MacOS-${{ matrix.os-version }})
+      run: ./builds/ExampleApp
