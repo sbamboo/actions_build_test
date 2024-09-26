@@ -20,10 +20,12 @@ jobs:
     - run: pip install -r staged/stager_requirements.txt
     - run: python staged/stager.py
 
+    - run: cp src/requirements.txt staged/fused/requirements.txt
+
     - uses: actions/upload-artifact@master
       with:
         name: fused
-        path: staged/fused/__init__.py
+        path: staged/fused/*
 
   linux:
     needs: stage
@@ -128,7 +130,7 @@ jobs:
       - uses: jaywcjlove/github-action-folder-tree@main
         with:
           path: ./builds/
-      - run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" \) | head -n 1); [ -n "$f" ] && cp "$f" "./builds/dist/$(basename "$d")_$(basename "$f")"; done
+      - run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [[ "$f" == *.py ]]; then cp "$f" "./builds/dist/$(basename "$d").py"; elif [ -n "$f" ]; then cp "$f" "./builds/dist/$(basename "$d")_$(basename "$f")"; fi; done
       - uses: jaywcjlove/github-action-folder-tree@main
         with:
           path: ./builds/
