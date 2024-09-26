@@ -1,4 +1,4 @@
-name: Pyinstaller Ttest
+name: Pyinstaller Test
 run-name: ${{ github.actor }} is testing python code.
 on:
   workflow_dispatch:
