@@ -42,18 +42,18 @@ jobs:
         mkdir -p ./builds/web
 
     - name: Read content and replace placeholder in index.html
-        run: |
-          # Read the content of the Python file into a temporary variable
-          content=$(<staged/fused/__init__.py)
+      run: |
+        # Read the content of the Python file into a temporary variable
+        content=$(<staged/fused/__init__.py)
 
-          # Create a temporary file with the content
-          echo "$content" > temp_content.txt
+        # Create a temporary file with the content
+        echo "$content" > temp_content.txt
 
-          # Replace the placeholder in the HTML file using the temporary file
-          sed -e "/<!--SOURCEHERE-->/r temp_content.txt" -e "//d" src/targets/web/index.html > ./builds/web/index.html
+        # Replace the placeholder in the HTML file using the temporary file
+        sed -e "/<!--SOURCEHERE-->/r temp_content.txt" -e "//d" src/targets/web/index.html > ./builds/web/index.html
 
-          # Clean up temporary file
-          rm temp_content.txt
+        # Clean up temporary file
+        rm temp_content.txt
 
     - uses: actions/upload-artifact@master
       with:
