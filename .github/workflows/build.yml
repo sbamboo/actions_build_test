@@ -29,8 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Build with pyinstaller, targeting linux_x86_64.
-        
-    - uses: actions/checkout@v4
+      uses: actions/checkout@v4
 
     - uses: actions/download-artifact@master
       with:
