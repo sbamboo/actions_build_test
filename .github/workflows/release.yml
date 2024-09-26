@@ -2,7 +2,7 @@ name: Pyinstaller Release
 run-name: ${{ github.actor }} is building and releasing python code.
 on:
   release:
-    published
+    types: [published]
 
 jobs:
 
