@@ -20,8 +20,6 @@ jobs:
     - run: pip install -r staged/stager_requirements.txt
     - run: python staged/stager.py
 
-    - run: cp src/requirements.txt staged/fused/requirements.txt
-
     - uses: actions/upload-artifact@master
       with:
         name: fused
@@ -134,8 +132,17 @@ jobs:
           path: ./builds/
       
       - name: Move correct files (script)
-        run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [ -n "$f" ]; then filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py ]]; then cp "$f" "./builds/dist/${folder}.py"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
+        run: mkdir -p ./builds/dist && mkdir -p ./builds/dist/pysource && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [ -n "$f" ]; then filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py ]]; then cp "$f" "./builds/dist/pysource/${folder}.py"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
       
+      - name: Copy requirements.txt (script)
+        run: cp src/requirements.txt ./builds/dist/pysource/requirements.txt
+
+      - name: Compress pysource (script)
+        run: zip -j ./builds/dist/pysource.zip ./builds/dist/pysource/*
+
+      - name: Remove pysource-dir (script)
+        run: [ -d ./builds/dist/pysource ] && rm -rf ./builds/dist/pysource
+
       - name: Tree Builds-Folder (post)
         uses: jaywcjlove/github-action-folder-tree@main
         with:
