@@ -1,14 +1,11 @@
-name: Pyinstaller Build
-run-name: ${{ github.actor }} is building python code.
-on: 
-  push:
-  workflow_dispatch:
+name: Pyinstaller Release
+run-name: ${{ github.actor }} is building and releasing python code.
+on: [release]
 
 jobs:
 
   stage:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'TRG_B')
     steps:
     - uses: actions/checkout@v4
 
@@ -113,3 +110,42 @@ jobs:
       with:
         name: macos_${{ matrix.arch }}
         path: builds/*
+
+  release:
+    needs: [linux,windows,macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: ./builds/
+      
+      - name: Tree Builds-Folder (pre)
+        uses: jaywcjlove/github-action-folder-tree@main
+        with:
+          path: ./builds/
+      
+      - name: Move correct files (script)
+        run: mkdir -p ./builds/dist && mkdir -p ./builds/dist/pysource && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [ -n "$f" ]; then filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py ]]; then cp "$f" "./builds/dist/pysource/${folder}.py"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
+      
+      - name: Copy requirements.txt (script)
+        run: cp src/requirements.txt ./builds/dist/pysource/requirements.txt
+
+      - name: Compress pysource (script)
+        run: zip -j ./builds/dist/pysource.zip ./builds/dist/pysource/*
+
+      - name: Remove pysource-dir (script)
+        run: if [ -d "./builds/dist/pysource" ]; then rm -rf "./builds/dist/pysource"; fi
+
+      - name: Tree Builds-Folder (post)
+        uses: jaywcjlove/github-action-folder-tree@main
+        with:
+          path: ./builds/
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./builds/dist/*
