@@ -24,7 +24,8 @@ jobs:
         path: staged/fused/*
 
     - run: pip install -r src/requirements.txt
-    - run: python staged/fused/__init__.py
+    - name: Test run staged pysource (python @ ubuntu-latest)
+      run: python staged/fused/__init__.py
 
   linux:
     needs: stage
