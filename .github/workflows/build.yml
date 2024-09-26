@@ -51,3 +51,75 @@ jobs:
         name: linux_x86_64
         path: builds/*
 
+  windows:
+    needs: stage
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: fused
+        path: staged/fused
+
+    - uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'staged/fused/__init__.py'
+        requirements: 'src/requirements.txt'
+        clean_checkout: false
+        exe_path: "./builds"
+        options: --onefile, --name "ExampleApp"
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: windows_x86_64
+        path: builds/*
+
+  macos:
+    needs: stage
+    strategy:
+      matrix:
+        os-version: ['12', '14']
+        include:
+          - os-version: '12'
+            arch: x86_64
+          - os-version: '14'
+            arch: aarch64
+    runs-on: macos-${{ matrix.os-version }}
+    env:
+      # even though we run on 12, target towards compatibility
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: fused
+        path: staged/fused
+        
+    - uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'staged/fused/__init__.py'
+        requirements: 'src/requirements.txt'
+        clean_checkout: false
+        exe_path: "./builds"
+        options: --onefile, --name "ExampleApp"
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: macos_${{ matrix.arch }}
+        path: builds/*
+
+  release:
+    needs: [linux,windows,macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+      - run: ls ./builds
