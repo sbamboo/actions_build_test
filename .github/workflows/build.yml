@@ -126,3 +126,5 @@ jobs:
         with:
           path: ./builds/
       - uses: jaywcjlove/github-action-folder-tree@main
+      - run: for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.*" -o -name "*.exe" -o ! -name "*.*" \) | head -n 1); [ -n "$f" ] && cp "$f" "./builds/$(basename "$d")_$(basename "$f")"; done
+      - uses: jaywcjlove/github-action-folder-tree@main
