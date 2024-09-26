@@ -112,9 +112,50 @@ jobs:
       with:
         name: macos_${{ matrix.arch }}
         path: builds/*
+        
+  web:
+    needs: stage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: fused
+        path: staged/fused
+
+    - name: Ensure builds and builds/web directories exist
+      run: |
+        mkdir -p ./builds/web
+
+    - name: Read content and replace placeholder in index.html
+      run: |
+        # Read the content into vars
+        content=$(<staged/fused/__init__.py)
+        requirements=$(<src/requirements.txt)
+
+        # Create temporary files
+        echo "$content" > temp_content.txt
+        # Read the requirements.txt and split by newlines, formatting as JSON
+        json_array=$(echo "$requirements" | sed 's/^/"/;s/$/"/;s/\n/","/g')
+        json_output="{\"packages\":[$json_array]}"
+        echo "$json_output" > temp_requirements.txt
+
+        # Replace the placeholders in the HTML file using the temporary file
+        sed -e "/<!--SOURCEHERE-->/r temp_content.txt" -e "//d" \
+              -e "/<!--REQUIREMENTSHERE-->/r temp_requirements.txt" -e "//d" \
+              src/targets/web/index.html > ./builds/web.html
+
+        # Clean up temporary file
+        rm temp_content.txt temp_requirements.txt
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: web_pyscript_pydiode
+        path: builds/*
 
   release:
-    needs: [linux,windows,macos]
+    needs: [linux,windows,macos,web]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
@@ -131,7 +172,7 @@ jobs:
           path: ./builds/
       
       - name: Move correct files (script)
-        run: mkdir -p ./builds/dist && mkdir -p ./builds/dist/pysource && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [ -n "$f" ]; then filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py ]]; then cp "$f" "./builds/dist/pysource/${folder}.py"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
+        run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" -o -name "*.html" \) | head -n 1); if [ -n "$f" ]; then filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py || "$filename" == *.html ]]; then cp "$f" "./builds/dist/${folder}.${filename##*.}"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
       
       - name: Copy requirements.txt (script)
         run: cp src/requirements.txt ./builds/dist/pysource/requirements.txt

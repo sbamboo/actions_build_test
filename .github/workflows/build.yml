@@ -114,7 +114,7 @@ jobs:
       with:
         name: macos_${{ matrix.arch }}
         path: builds/*
-        
+
   web:
     needs: stage
     runs-on: ubuntu-latest
@@ -146,7 +146,7 @@ jobs:
         # Replace the placeholders in the HTML file using the temporary file
         sed -e "/<!--SOURCEHERE-->/r temp_content.txt" -e "//d" \
               -e "/<!--REQUIREMENTSHERE-->/r temp_requirements.txt" -e "//d" \
-              src/targets/web/index.html > ./builds/web/index.html
+              src/targets/web/index.html > ./builds/web.html
 
         # Clean up temporary file
         rm temp_content.txt temp_requirements.txt
