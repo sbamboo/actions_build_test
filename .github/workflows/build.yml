@@ -51,7 +51,7 @@ jobs:
         echo "$content" > temp_content.txt
         # Read the requirements.txt and split by newlines, formatting as JSON
         json_array=$(echo "$requirements" | sed 's/^/"/;s/$/"/;s/\n/","/g')
-        json_output="{\"packages\":[$json_array]}"
+        json_output="packages: [$json_array]"
         echo "$json_output" > temp_requirements.txt
 
         # Replace the placeholders in the HTML file using the temporary file
