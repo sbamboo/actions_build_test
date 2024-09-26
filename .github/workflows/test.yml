@@ -1,0 +1,104 @@
+name: Pyinstaller Release
+run-name: ${{ github.actor }} is building and releasing python code.
+on:
+  workflow_dispatch:
+
+jobs:
+
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+        
+    - run: pip install -r staged/stager_requirements.txt
+    - run: python staged/stager.py
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: fused
+        path: staged/fused/*
+
+  linux:
+    needs: stage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: fused
+        path: staged/fused
+
+    - uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'staged/fused/__init__.py'
+        requirements: 'src/requirements.txt'
+        clean_checkout: false
+        exe_path: "./builds"
+        options: --onefile, --name "ExampleApp"
+
+    - run: ./builds/ExampleApp
+
+  windows:
+    needs: stage
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: fused
+        path: staged/fused
+
+    - uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'staged/fused/__init__.py'
+        requirements: 'src/requirements.txt'
+        clean_checkout: false
+        exe_path: "./builds"
+        options: --onefile, --name "ExampleApp"
+
+    - run: ./builds/ExampleApp.exe
+
+  macos:
+    needs: stage
+    strategy:
+      matrix:
+        os-version: ['12', '14']
+        include:
+          - os-version: '12'
+            arch: x86_64
+          - os-version: '14'
+            arch: aarch64
+    runs-on: macos-${{ matrix.os-version }}
+    env:
+      # even though we run on 12, target towards compatibility
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: fused
+        path: staged/fused
+        
+    - uses: sayyid5416/pyinstaller@v1
+      with:
+        python_ver: '3.12'
+        pyinstaller_ver: '==6.10.0'
+        spec: 'staged/fused/__init__.py'
+        requirements: 'src/requirements.txt'
+        clean_checkout: false
+        exe_path: "./builds"
+        options: --onefile, --name "ExampleApp"
+
+    - run: ./builds/ExampleApp
