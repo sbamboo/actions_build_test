@@ -125,10 +125,17 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: ./builds/
-      - uses: jaywcjlove/github-action-folder-tree@main
+      
+      - name: Builds-Folder (pre)
+        uses: jaywcjlove/github-action-folder-tree@main
         with:
           path: ./builds/
-      - run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [[ "$f" == *.py ]]; then cp "$f" "./builds/dist/$(basename "$d").py"; elif [ -n "$f" ]; then cp "$f" "./builds/dist/$(basename "$d")_$(basename "$f")"; fi; done
-      - uses: jaywcjlove/github-action-folder-tree@main
+      
+      - name: Move correct files
+        run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [[ "$f" == *.py ]]; then cp "$f" "./builds/dist/$(basename "$d").py"; elif [ -n "$f" ]; then cp "$f" "./builds/dist/$(basename "$d")_$(basename "$f")"; fi; done
+      
+      - name: Move correct files
+        uses: jaywcjlove/github-action-folder-tree@main
         with:
           path: ./builds/
+      
