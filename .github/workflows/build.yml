@@ -114,3 +114,31 @@ jobs:
       with:
         name: macos_${{ matrix.arch }}
         path: builds/*
+
+  web:
+    needs: stage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@master
+      with:
+        name: fused
+        path: staged/fused
+
+    - name: Ensure builds and builds/web directories exist
+      run: |
+        mkdir -p ./builds/web
+
+    - name: Replace placeholder in index.html
+      run: |
+        # Read the content of the Python file
+        content=$(<staged/fused/__init__.py)
+
+        # Replace the placeholder in the HTML file
+        sed "s|<!--SOURCEHERE-->|$content|g" src/targets/web/index.html > ./builds/web/index.html
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: web_pyscript_pydiode
+        path: builds/*
