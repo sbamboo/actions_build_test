@@ -172,8 +172,10 @@ jobs:
           path: ./builds/
       
       - name: Move correct files (script)
-        run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" -o -name "*.html" \) | head -n 1); if [ -n "$f" ]; then filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py || "$filename" == *.html ]]; then cp "$f" "./builds/dist/${folder}.${filename##*.}"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
+        run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" -o -name "*.html" \) | head -n 1); if [ -n "$f" ]; then filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py ]]; then cp "$f" "./builds/dist/${folder}.py"; elif [[ "$filename" == *.html ]]; then cp "$f" "./builds/dist/${folder}.html"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
       
+      - run: mkdir -p ./builds/dist/pysource
+
       - name: Copy requirements.txt (script)
         run: cp src/requirements.txt ./builds/dist/pysource/requirements.txt
 
