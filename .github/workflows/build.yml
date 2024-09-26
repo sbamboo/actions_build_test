@@ -126,5 +126,9 @@ jobs:
         with:
           path: ./builds/
       - uses: jaywcjlove/github-action-folder-tree@main
-      - run: for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.*" -o -name "*.exe" -o ! -name "*.*" \) | head -n 1); [ -n "$f" ] && cp "$f" "./builds/$(basename "$d")_$(basename "$f")"; done
+        with:
+          path: ./builds/
+      - run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" \) | head -n 1); [ -n "$f" ] && cp "$f" "./builds/dist/$(basename "$d")_$(basename "$f")"; done
       - uses: jaywcjlove/github-action-folder-tree@main
+        with:
+          path: ./builds/
