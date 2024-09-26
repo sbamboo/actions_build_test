@@ -23,6 +23,7 @@ jobs:
         name: fused
         path: staged/fused/*
 
+    - run: pip install -r src/requirements.txt
     - run: python staged/fused/__init__.py
 
   linux:
