@@ -126,16 +126,21 @@ jobs:
         with:
           path: ./builds/
       
-      - name: Builds-Folder (pre)
+      - name: Tree Builds-Folder (pre)
         uses: jaywcjlove/github-action-folder-tree@main
         with:
           path: ./builds/
       
-      - name: Move correct files
-        run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [[ "$f" == *.py ]]; then cp "$f" "./builds/dist/$(basename "$d").py"; elif [ -n "$f" ]; then cp "$f" "./builds/dist/$(basename "$d")_$(basename "$f")"; fi; done
+      - name: Move correct files (script)
+        run: mkdir -p ./builds/dist && for d in ./builds/*/; do f=$(find "$d" -maxdepth 1 -type f \( -name "*.exe" -o ! -name "*.*" -o -name "*.py" \) | head -n 1); if [ -n "$f" ]; then ext="${f##*.}"; filename=$(basename "$f"); folder=$(basename "$d"); if [[ "$filename" == *.py ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.py"; elif [[ "$filename" == *.exe ]]; then cp "$f" "./builds/dist/${filename%.*}_${folder}.exe"; else cp "$f" "./builds/dist/${filename}_${folder}"; fi; fi; done
       
-      - name: Move correct files
+      - name: Tree Builds-Folder (post)
         uses: jaywcjlove/github-action-folder-tree@main
         with:
           path: ./builds/
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./builds/dist/*
       
