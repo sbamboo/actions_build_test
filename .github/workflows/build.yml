@@ -141,7 +141,7 @@ jobs:
         run: zip -j ./builds/dist/pysource.zip ./builds/dist/pysource/*
 
       - name: Remove pysource-dir (script)
-        run: [ -d ./builds/dist/pysource ] && rm -rf ./builds/dist/pysource
+        run: if [ -d "./builds/dist/pysource" ]; then rm -rf "./builds/dist/pysource"; fi
 
       - name: Tree Builds-Folder (post)
         uses: jaywcjlove/github-action-folder-tree@main
@@ -152,5 +152,5 @@ jobs:
         with:
           files: |
             ./builds/dist/*
-            
+
       
