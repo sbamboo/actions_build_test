@@ -1,2 +1,0 @@
-# MainClass
-class FrontEndManager()
