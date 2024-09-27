@@ -24,7 +24,7 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: fused
-        path: staged/fused/*
+        path: staged/o/fused/*
 
   linux:
     needs: stage

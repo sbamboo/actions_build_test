@@ -21,11 +21,11 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: fused
-        path: staged/fused/*
+        path: staged/o/fused/*
 
     - run: pip install -r src/requirements.txt
     - name: Test run staged pysource (python @ ubuntu-latest)
-      run: python staged/fused/__init__.py
+      run: python staged/o/fused/__init__.py
 
   linux:
     needs: stage

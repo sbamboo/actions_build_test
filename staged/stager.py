@@ -9,17 +9,17 @@ config = {
 
     "proj-name": "example",
 
-    "builds-dir": "./../staged/",
+    "builds-dir": "./../staged/o/",
 
     "main-file": "./../src/__init__.py",
     
     "esm": { # EmbedableSourceModule
-        "output-dir": "./../staged/esm/%pn",
+        "output-dir": "./../staged/o/esm/%pn",
         "output-main-file": "__init__.py"
     },
 
     "fused": { # %1: FileName, %2: FileExt
-        "output-file": "./../staged/fused/__init__.%2"
+        "output-file": "./../staged/o/fused/__init__.%2"
     },
 
     "file": { # id to use in include to spec this opts
@@ -43,6 +43,10 @@ config = {
 # Imports
 import os, shutil, sys, json
 from datetime import datetime
+
+class _formatting_inst():
+    def parse(i): return i
+formatting_inst = _formatting_inst()
 
 # Setup Vars
 parent = os.path.dirname(os.path.abspath(__file__))
@@ -75,7 +79,9 @@ if len(sys.argv) > 1:
 def fprint(s): print(s)
 
 # Setup
-def f(s,isdir:bool=False,tags:dict={}):
+def f(s,isdir:bool=False,tags:dict={},isfile_parent=None):
+    if not os.path.isdir(s) and isfile_parent != None:
+        s = os.path.abspath(os.path.join(os.path.abspath(isfile_parent),s))
     if s.lstrip().startswith("./"):
         t = os.path.abspath(s.replace("./",parent+"/",1))
     elif s.lstrip().startswith(".\\"):
@@ -193,14 +199,21 @@ def parse(mode:str,content:str,fileOpts:dict={},inputParent=parent,outputParent=
                         opts = fileOpts[args[0]]
                         args[0] = f(opts["path"])
                     else:
-                        args[0] = f(args[0])
+                        args[0] = f(args[0],isfile_parent=inputParent)
                     # Handle non-exit
                     if not os.path.exists(args[0]):
                         fprint("{f.red}Skipped include for "+os.path.basename(args[0])+", file not found!{r}")
                         new_lines.append(line+" $fuse.skipped.notFound")
                         continue
                     # Create shortpath and longpath
-                    shortpath = os.path.splitext(args[0].replace("\\","/").replace(inputParent.replace("\\","/").rstrip("/"),"").lstrip("/"))[0]
+                    if inputParent.replace("\\","/").rstrip("/") in args[0].replace("\\","/"):
+                        repoc = inputParent
+                    else:
+                        if parent.replace("\\","/").rstrip("/") in args[0].replace("\\","/"):
+                            repoc = parent
+                        else:
+                            repoc = os.path.dirname(parent)
+                    shortpath = os.path.splitext(args[0].replace("\\","/").replace(repoc.replace("\\","/").rstrip("/"),"").lstrip("/"))[0]
                     shortpath_pathsafe = shortpath.replace("/",os.sep)
                     longpath = f(args[0]).replace("\\","/")
                     extension = os.path.splitext(longpath)[-1]
@@ -255,7 +268,7 @@ def parse(mode:str,content:str,fileOpts:dict={},inputParent=parent,outputParent=
                         if opts.get("custom-esm-import") != None:
                             line = opts["custom-esm-import"].replace("%s",shortpath).replace("%l",longpath).replace("%o",orgpath)
                         else:
-                            line = f"from .{shortpath.replace("/",".")} import *"
+                            line = f"from .{shortpath.replace('/','.')} import *"
                         # Indent Carryover
                         if not "--no-indent-carryover" in config["flags"] and prefixIndentation != "":
                             line = prefixIndentation+line

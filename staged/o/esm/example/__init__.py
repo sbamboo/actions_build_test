@@ -1,9 +1,12 @@
+# Created with alpha.fusekit.lite 0.0.1 on 2024-09-27 22:45:15
+# 
+
 # fuse import
 import sys,os
 # fuse import
 
-# fuse:include ./frontends.py
-# fuse:include ./defines.frontends.py
+from .frontends import *
+from .defines.frontends import *
 
 # region: Example
 from rich.console import Console
