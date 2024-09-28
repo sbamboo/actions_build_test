@@ -2,6 +2,9 @@
 import sys,os
 # fuse import
 
+# The next line should be replaced by bprep.py in its entierity
+BUILD_TARGET_IDENTIFIER="pysource","any","any",-1,{} #<target>,<arch>,<osver>,<epoch>,<flags>
+
 # fuse:include ./frontends.py
 # fuse:include ./defines.frontends.py
 
