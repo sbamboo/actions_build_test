@@ -1,6 +1,10 @@
-class ExampleTkinterFrontEnd(FrontEndSchemaReciever):
+from .src.libs.fuse_legacy_ui import *
+
+class ExampleCliFrontEnd(FrontEndSchemaReciever):
     def __init__(self):
         super().__init__()
+        self._console = Console()
+        self._text = Text(self._console.terminal)
 
     # Overridable Implementations
     def on_assemble(self,host,**assembly_options):
@@ -19,7 +23,13 @@ class ExampleTkinterFrontEnd(FrontEndSchemaReciever):
     def display(self,schema):
         '''Requests a schema to be displayed.'''
         self._display(schema)
-        
+        ml = 0
+        for k in schema["content"].keys():
+            if len(k) > ml: ml = len(k)
+        for k,v in schema["content"].items():
+            s = "{f.magenta}"+str(k)+((ml-len(k))*" ")+"{f.darkgray} : {f.magenta}"+str(v)+"{r}"
+            print(self._text.parse(s))
+
     def terminate(self):
         '''Terminates any "second-window" applications and stops eventual listeners. (Called on expected-stop of schema-reciever)'''
         self._terminate()

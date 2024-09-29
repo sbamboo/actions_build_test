@@ -31,7 +31,7 @@ def parse_arguments(args):
         elif arg == '-flags' and i + 1 < len(args):
             try:
                 internal_dict["flags"] = json.loads(args[i + 1])
-            except json.JSONDecodeError:
+            except json.JSONDecodeError as e:
                 print("Error: Invalid JSON string for -flags")
                 sys.exit(1)
 

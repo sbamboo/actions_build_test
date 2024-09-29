@@ -19,6 +19,26 @@
 
         <!-- CODE -->
         <py-script terminal>
+AUTO_PARSE_URL_PARAMS = True
+
+# BlockCode to turn urlParams into sys.argv, replacing the first arg with the url-main
+if AUTO_PARSE_URL_PARAMS == True:
+    from pyscript import window
+    from urllib.parse import urlparse, unquote, parse_qs
+    query_str = urlparse(window.location.search).query
+    if query_str.startswith('?'): query_str = query_str[1:]
+    decoded = []
+    for key,values in parse_qs(unquote(query_str),keep_blank_values=True).items():
+        for value in values:
+            if value == "": decoded.append(f"--{key}")
+            else: decoded.extend([f"--{key}",value])
+    if "?" in window.location.href: m_url = window.location.href.split("?")[0]
+    else: m_url = window.location.href
+    import sys
+    sys.argv = [m_url,*decoded]
+    del query_str,key,values,value,decoded,m_url,urlparse,unquote,parse_qs,window
+# End of BlockCode
+
 <!--SOURCEHERE-->
         </py-script>
             
