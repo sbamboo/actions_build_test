@@ -28,9 +28,9 @@ i = 0
 for k,v in PYINST_PROPERTIES.idef.flags.items():
     if not k.startswith("_"):
         if i == 0:
-            console.print(f" {k}: {v}",style="blue")
+            console.print(f" {k}= {v}",style="blue")
         else:
-            console.print(f"                      {k}: {v}", style="blue")
+            console.print(f"                      {k}= {v}", style="blue")
         i += 1
 if i == 0:
     console.print(" None", style="magenta")
