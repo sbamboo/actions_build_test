@@ -59,11 +59,11 @@ if os.path.exists(res["path"]):
         new_lines.append(line)
     new_content = "\n".join(new_lines)
 
-    print(f"Generated '{buildstr}' for '{res["path"]}'")
+    print("Generated '" + buildstr + "' for '" + res.get("path","None") + "'")
 
     with open(res["path"],'w',encoding=res["ienc"]) as f2:
         f2.write(new_content)
         f2.close()
 
 else:
-    raise FileNotFoundError(f"File '{res["path"]}' not found!")
+    raise FileNotFoundError("File '" + res.get("path","None") + "' not found!")
