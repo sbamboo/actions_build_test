@@ -1,3 +1,6 @@
+# Created with alpha.fusekit.lite 0.0.1 on 2024-09-29 13:08:50
+# 
+
 # fuse:import
 import sys,os
 # fuse:import
@@ -5,10 +8,10 @@ import sys,os
 # The next line should be replaced by bprep.py in its entierity
 BUILD_TARGET_IDENTIFIER="pysource","any","any",-1,{} #<target>,<arch>,<osver>,<epoch>,<flags>
 
-# fuse:include ./pyinst_essentials.py
+from .pyinst_essentials import *
 
-# fuse:include ./frontends.py
-# fuse:include ./defines_frontends.py
+from .frontends import *
+from .defines_frontends import *
 
 # region: Example
 from rich.console import Console

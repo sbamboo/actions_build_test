@@ -8,6 +8,7 @@ jobs:
 
   stage:
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'TRG_B')
     steps:
     - uses: actions/checkout@v4
 
@@ -29,6 +30,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target linux -arch x86_64 -flags '{"onefile":true,"runner":"ubuntu-latest"}'
 
     - uses: actions/download-artifact@master
       with:
@@ -55,6 +63,13 @@ jobs:
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+    
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target windows -arch x86_64 -flags '{"onefile":true,"runner":"windows-2019"}'
 
     - uses: actions/download-artifact@master
       with:
@@ -93,6 +108,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+    
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target macos -arch ${{ matrix.arch }} -osver ${{ matrix.os-version }} -flags '{"onefile":true,"runner":"macos-${{ matrix.os-version }}"}'
+
     - uses: actions/download-artifact@master
       with:
         name: fused
@@ -112,13 +134,20 @@ jobs:
       with:
         name: macos_${{ matrix.arch }}
         path: builds/*
-        
+
   web:
     needs: stage
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'TRG_W')
     steps:
     - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+    
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target web -arch pyscript_pydiode -flags '{"onefile":true,"runner":"ubuntu-latest"}'
 
     - uses: actions/download-artifact@master
       with:

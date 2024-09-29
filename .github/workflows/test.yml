@@ -1,12 +1,15 @@
-name: Pyinstaller Test
-run-name: ${{ github.actor }} is testing python code.
+name: Pyinstaller Build
+run-name: ${{ github.actor }} is building python code.
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
 
   stage:
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'TRG_B')
     steps:
     - uses: actions/checkout@v4
 
@@ -33,6 +36,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target linux -arch x86_64 -flags '{"onefile":true,"runner":"ubuntu-latest"}'
+
     - uses: actions/download-artifact@master
       with:
         name: fused
@@ -56,6 +66,13 @@ jobs:
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+    
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target windows -arch x86_64 -flags '{"onefile":true,"runner":"windows-2019"}'
 
     - uses: actions/download-artifact@master
       with:
@@ -92,6 +109,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+    
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target macos -arch ${{ matrix.arch }} -osver ${{ matrix.os-version }} -flags '{"onefile":true,"runner":"macos-${{ matrix.os-version }}"}'
+
     - uses: actions/download-artifact@master
       with:
         name: fused
@@ -109,3 +133,15 @@ jobs:
 
     - name: Test run built binary (MacOS_${{ matrix.arch }} @ MacOS-${{ matrix.os-version }})
       run: ./builds/ExampleApp
+
+
+  cleanup:
+    needs: [linux,windows,macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+          name: fused
+          failOnError: false

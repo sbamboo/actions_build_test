@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import json
@@ -9,7 +10,8 @@ def parse_arguments(args):
         "target": "any",
         "arch": "any",
         "osver": "any",
-        "flags": {}
+        "flags": {},
+        "ienc": "utf-8"
     }
 
     # Iterate over arguments and parse accordingly
