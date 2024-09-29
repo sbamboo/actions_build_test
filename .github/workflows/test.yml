@@ -38,12 +38,12 @@ jobs:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
 
-    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target linux -arch x86_64 -flags '{"onefile":true,"runner":"ubuntu-latest"}'
-
     - uses: actions/download-artifact@master
       with:
         name: fused
         path: staged/fused
+
+    - run: python staged/bprep.py -path 'staged/fused/_init__.py' -target linux -arch x86_64 -flags '{"onefile":true,"runner":"ubuntu-latest"}'
 
     - uses: sayyid5416/pyinstaller@v1
       with:
@@ -68,13 +68,13 @@ jobs:
       with:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
-    
-    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target windows -arch x86_64 -flags '{"onefile":true,"runner":"windows-2019"}'
 
     - uses: actions/download-artifact@master
       with:
         name: fused
         path: staged/fused
+    
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target windows -arch x86_64 -flags '{"onefile":true,"runner":"windows-2019"}'
 
     - uses: sayyid5416/pyinstaller@v1
       with:
@@ -110,13 +110,13 @@ jobs:
       with:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
-    
-    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target macos -arch ${{ matrix.arch }} -osver ${{ matrix.os-version }} -flags '{"onefile":true,"runner":"macos-${{ matrix.os-version }}"}'
 
     - uses: actions/download-artifact@master
       with:
         name: fused
         path: staged/fused
+    
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target macos -arch ${{ matrix.arch }} -osver ${{ matrix.os-version }} -flags '{"onefile":true,"runner":"macos-${{ matrix.os-version }}"}'
         
     - uses: sayyid5416/pyinstaller@v1
       with:
