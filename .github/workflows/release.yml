@@ -211,8 +211,13 @@ jobs:
 
       - name: Copy requirements.txt (script)
         run: cp src/requirements.txt ./builds/dist/pysource/requirements.txt
+      
+      - name: Tree Builds-Folder (mid)
+        uses: jaywcjlove/github-action-folder-tree@main
+        with:
+          path: ./builds/
 
-      - run: python staged/bprep.py -path 'builds/dist/pysource/fused.py' -target pysource -flags '{"runner":"ubuntu-latest"}'
+      - run: python staged/bprep.py -path './builds/dist/pysource/fused.py' -target pysource -flags '{"runner":"ubuntu-latest"}'
 
       - name: Compress pysource (script)
         run: zip -j ./builds/dist/pysource.zip ./builds/dist/pysource/*
