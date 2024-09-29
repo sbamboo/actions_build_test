@@ -43,7 +43,7 @@ jobs:
         name: fused
         path: staged/fused
 
-    - run: python staged/bprep.py -path 'staged/fused/_init__.py' -target linux -arch x86_64 -flags '{"onefile":true,"runner":"ubuntu-latest"}'
+    - run: python staged/bprep.py -path 'staged/fused/__init__.py' -target linux -arch x86_64 -flags '{"onefile":true,"runner":"ubuntu-latest"}'
 
     - uses: sayyid5416/pyinstaller@v1
       with:
