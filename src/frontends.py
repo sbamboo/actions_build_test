@@ -1,9 +1,16 @@
+#fuse:include ./libs/fuse_legacy_ui.py
+#fuse:exclude
+from libs.fuse_legacy_ui import EventHandler,EventReciever
+#fuse:exclude
+
 # Define the main frontend-engine aswell as the class that frontends should inherit from
 
 class FrontEndSchema(dict):
     """
     A `FrontEndSchema` is a dictionary that follows a specific structure,
     that when sent to a `FrontEndSchemaReciever` tells it how to display stuff.
+
+    A `FrontEndSchema` also contains an `EventHandler` under '<FrontEndSchema>.events'
 
     Example:
     {
@@ -58,6 +65,7 @@ class FrontEndSchema(dict):
         for k,v in predict.items():
             self[k] = v
         self.reciever = None
+        self.events = EventHandler()
 
     def setReciever(self, reciever):
         self.reciever = reciever
@@ -153,6 +161,9 @@ class FrontEndSchemaReciever():
         self.active_options = None
         self.active = False
 
+    def _clear(self):
+        pass
+
     # Overridable Implementations
     def on_assemble(self,host,**assembly_options):
         '''Called on assemble, can do eventuall background-setup.'''
@@ -170,6 +181,9 @@ class FrontEndSchemaReciever():
     def terminate(self):
         '''Terminates any "second-window" applications and stops eventual listeners. (Called on expected-stop of schema-reciever)'''
         self._terminate()
+    def clear(self):
+        '''Clears the frontend.'''
+        self._clear()
 
 class FrontEndSchemaHost():
     def __init__(self,frontends={}):

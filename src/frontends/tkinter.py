@@ -23,3 +23,7 @@ class ExampleTkinterFrontEnd(FrontEndSchemaReciever):
     def terminate(self):
         '''Terminates any "second-window" applications and stops eventual listeners. (Called on expected-stop of schema-reciever)'''
         self._terminate()
+        
+    def clear(self):
+        '''Clears the frontend.'''
+        self._clear()

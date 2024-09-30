@@ -1,4 +1,4 @@
-#fuse:include ../libs/fuse_legacy_ui.py
+#fuse:include ../libs/conUtils.py
 
 class ExampleCliFrontEnd(FrontEndSchemaReciever):
     def __init__(self):
@@ -19,6 +19,7 @@ class ExampleCliFrontEnd(FrontEndSchemaReciever):
     def launch(self,**active_options):
         '''Launches "second-window" applications and starts eventual listeners. (Called on expected-init of schema-reciever)'''
         self._launch(**active_options)
+        self.clear()
 
     def display(self,schema):
         '''Requests a schema to be displayed.'''
@@ -33,3 +34,8 @@ class ExampleCliFrontEnd(FrontEndSchemaReciever):
     def terminate(self):
         '''Terminates any "second-window" applications and stops eventual listeners. (Called on expected-stop of schema-reciever)'''
         self._terminate()
+
+    def clear(self):
+        '''Clears the frontend.'''
+        self._clear()
+        clear()
